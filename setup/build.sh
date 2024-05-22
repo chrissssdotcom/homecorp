@@ -17,19 +17,27 @@ if ! command -v yq &> /dev/null; then
     fi
 fi
 
-# Define the target directory
-TARGET_DIR="/srv/configuration/apps"
+# Define the target directories
+CONFIG_DIR="/srv/configuration/apps"
+CONTAINER_DATA_DIR="/mnt/container-data"
 
-# Create the target directory if it doesn't exist
-if [ ! -d "$TARGET_DIR" ]; then
-    mkdir -p "$TARGET_DIR"
-    echo "Created directory $TARGET_DIR"
+# Create the target directories if they don't exist
+if [ ! -d "$CONFIG_DIR" ]; then
+    mkdir -p "$CONFIG_DIR"
+    echo "Created directory $CONFIG_DIR"
 else
-    echo "Directory $TARGET_DIR already exists"
+    echo "Directory $CONFIG_DIR already exists"
+fi
+
+if [ ! -d "$CONTAINER_DATA_DIR" ]; then
+    mkdir -p "$CONTAINER_DATA_DIR"
+    echo "Created directory $CONTAINER_DATA_DIR"
+else
+    echo "Directory $CONTAINER_DATA_DIR already exists"
 fi
 
 # Define the apps list file
-APPS_FILE="../apps.yaml"
+APPS_FILE="apps.yaml"
 
 # Check if the apps list file exists
 if [ ! -f "$APPS_FILE" ]; then
@@ -40,12 +48,23 @@ fi
 # Read the YAML file and create directories for each app
 apps=$(yq eval '.apps[].name' "$APPS_FILE")
 for app_name in $apps; do
-    app_dir="$TARGET_DIR/$app_name"
-    if [ ! -d "$app_dir" ]; then
-        mkdir "$app_dir"
-        echo "Created directory $app_dir"
+    config_app_dir="$CONFIG_DIR/$app_name"
+    container_app_dir="$CONTAINER_DATA_DIR/$app_name"
+    
+    # Create the configuration directory for the app
+    if [ ! -d "$config_app_dir" ]; then
+        mkdir "$config_app_dir"
+        echo "Created directory $config_app_dir"
     else
-        echo "Directory $app_dir already exists"
+        echo "Directory $config_app_dir already exists"
+    fi
+
+    # Create the container data directory for the app
+    if [ ! -d "$container_app_dir" ]; then
+        mkdir "$container_app_dir"
+        echo "Created directory $container_app_dir"
+    else
+        echo "Directory $container_app_dir already exists"
     fi
 done
 

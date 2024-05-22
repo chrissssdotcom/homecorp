@@ -1,0 +1,3 @@
+apps:
+  - name: paperless
+    url: "https://docs.paperless-ngx.com/setup/"

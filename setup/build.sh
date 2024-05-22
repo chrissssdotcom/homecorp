@@ -9,8 +9,7 @@ fi
 # Install yq if not already installed
 if ! command -v yq &> /dev/null; then
     echo "yq not found. Installing yq..."
-    sudo apt-get update
-    sudo apt-get install -y yq
+    sudo snap install yq
     if [ $? -ne 0 ]; then
         echo "Failed to install yq. Please install it manually."
         exit 1

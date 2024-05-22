@@ -36,7 +36,7 @@ else
 fi
 
 # Define the apps list file
-APPS_FILE="apps.yaml"
+APPS_FILE="../apps.yaml"
 
 # Check if the apps list file exists
 if [ ! -f "$APPS_FILE" ]; then

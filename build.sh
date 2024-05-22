@@ -40,7 +40,6 @@ APPS_FILE="apps.yaml"
 
 # Check if the apps list file exists
 if [ ! -f "$APPS_FILE" ]; then
-    cat $APPS_FILE
     echo "File $APPS_FILE not found. Please create the file with a list of apps."
     exit 1
 fi

@@ -6,15 +6,25 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-# Install yq if not already installed
-if ! command -v yq &> /dev/null; then
-    echo "yq not found. Installing yq..."
-    sudo snap install yq
+# Define the URL for the yq binary
+YQ_BINARY_URL="https://github.com/mikefarah/yq/releases/download/v4.44.1/yq_linux_amd64"
+YQ_BINARY_PATH="/bin/yq"
+
+# Check if yq binary is installed in /bin
+if [ ! -f "$YQ_BINARY_PATH" ]; then
+    echo "yq not found in /bin. Installing yq..."
+    curl -L $YQ_BINARY_URL -o $YQ_BINARY_PATH
+    chmod +x $YQ_BINARY_PATH
     if [ $? -ne 0 ]; then
         echo "Failed to install yq. Please install it manually."
         exit 1
     fi
+else
+    echo "yq is already installed in /bin."
 fi
+
+# Get the directory of the current script
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
 # Define the target directories
 CONFIG_DIR="/srv/configuration/apps"
@@ -35,7 +45,7 @@ else
     echo "Directory $CONTAINER_DATA_DIR already exists"
 fi
 
-# Define the apps list file
+# Define the apps list file with an absolute path
 APPS_FILE="apps.yaml"
 
 # Check if the apps list file exists
